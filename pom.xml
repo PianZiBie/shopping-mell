@@ -20,6 +20,11 @@
         <module>mell-order</module>
         <module>mell-coupon</module>
         <module>mell-member</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
+        <module>mell-common</module>
+        <module>mell-gateway</module>
+        <module>mell-third-party</module>
     </modules>
 
 
