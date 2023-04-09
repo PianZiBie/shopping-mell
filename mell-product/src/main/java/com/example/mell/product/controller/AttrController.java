@@ -5,11 +5,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;
 import com.example.mell.product.entity.AttrEntity;
@@ -28,6 +24,21 @@ import com.example.mell.product.service.AttrService;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+
+    /**
+     *
+     * @param params
+     * @param catelogId
+     * @return
+     */
+
+    @RequestMapping("/base/list/{catelogId}")
+    public R baseAttrList(@RequestParam Map<String, Object> params,@PathVariable("catelogId") Long catelogId){
+        PageUtils page = attrService.queryBaseAttrPage(params,catelogId);
+
+        return R.ok().put("page", page);
+    }
+
 
     /**
      * 列表

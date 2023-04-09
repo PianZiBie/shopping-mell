@@ -67,6 +67,7 @@ public class BrandController {
     @RequestMapping("/save")
     //@RequiresPermissions("product:brand:save")
     public R save( @Validated({AddGroup.class}) @RequestBody  BrandEntity brand /*, BindingResult */){
+        //已经进行统一异常处理
 //        if (result.hasErrors()){
 //            HashMap<String, String> msg = new HashMap<>();
 //            result.getFieldErrors().forEach(item ->{
@@ -79,6 +80,7 @@ public class BrandController {
 //        else{
 //                brandService.save(brand);
 //         }
+
         brandService.save(brand);
 
         return R.ok();
@@ -90,7 +92,7 @@ public class BrandController {
     @RequestMapping("/update")
     //@RequiresPermissions("product:brand:update")
     public R update(@Validated(UpdateGroup.class)@RequestBody BrandEntity brand){
-        brandService.updateById(brand);
+        brandService.updateDetail(brand);
 
         return R.ok();
     }
