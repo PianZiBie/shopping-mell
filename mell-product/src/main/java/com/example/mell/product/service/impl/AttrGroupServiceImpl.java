@@ -1,6 +1,5 @@
 package com.example.mell.product.service.impl;
 
-import com.alibaba.nacos.shaded.com.google.common.base.Function;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.Query;
 import org.apache.commons.lang.StringUtils;
@@ -32,9 +31,8 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Override
     public PageUtils queryPage(Map<String, Object> params, Long catelogId) {
-        String key = params.get("key").toString();
         QueryWrapper<AttrGroupEntity> queryWrapper = new QueryWrapper<>();
-
+            String key = (String) params.get("key");
         if (StringUtils.isNotEmpty(key)) {
             queryWrapper.and(obj -> {
                 obj.eq("attr_group_id", key).or().like("attr_group_name", key);
@@ -44,7 +42,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         if (catelogId == 0) {
             IPage<AttrGroupEntity> page = this.page(
                     new Query<AttrGroupEntity>().getPage(params),
-                   queryWrapper
+                    queryWrapper
             );
             return new PageUtils(page);
 
