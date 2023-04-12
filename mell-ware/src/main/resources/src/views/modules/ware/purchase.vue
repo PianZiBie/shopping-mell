@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('ware:wmswaresku:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('ware:wmswaresku:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('ware:purchase:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('ware:purchase:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -26,37 +26,61 @@
         prop="id"
         header-align="center"
         align="center"
-        label="id">
+        label="">
       </el-table-column>
       <el-table-column
-        prop="skuId"
+        prop="assigneeId"
         header-align="center"
         align="center"
-        label="sku_id">
+        label="">
+      </el-table-column>
+      <el-table-column
+        prop="assigneeName"
+        header-align="center"
+        align="center"
+        label="">
+      </el-table-column>
+      <el-table-column
+        prop="phone"
+        header-align="center"
+        align="center"
+        label="">
+      </el-table-column>
+      <el-table-column
+        prop="priority"
+        header-align="center"
+        align="center"
+        label="">
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        header-align="center"
+        align="center"
+        label="">
       </el-table-column>
       <el-table-column
         prop="wareId"
         header-align="center"
         align="center"
-        label="仓库id">
+        label="">
       </el-table-column>
       <el-table-column
-        prop="stock"
+        prop="amount"
         header-align="center"
         align="center"
-        label="库存数">
+        label="">
       </el-table-column>
       <el-table-column
-        prop="skuName"
+        prop="createTime"
         header-align="center"
         align="center"
-        label="sku_name">
+        label="">
       </el-table-column>
       <el-table-column
-        prop="stockLocked"
+        prop="updateTime"
         header-align="center"
         align="center"
-        label="锁定库存">
+        label="">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -85,7 +109,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './wmswaresku-add-or-update'
+  import AddOrUpdate from './purchase-add-or-update'
   export default {
     data () {
       return {
@@ -112,7 +136,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/ware/wmswaresku/list'),
+          url: this.$http.adornUrl('/ware/purchase/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -163,7 +187,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/ware/wmswaresku/delete'),
+            url: this.$http.adornUrl('/ware/purchase/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

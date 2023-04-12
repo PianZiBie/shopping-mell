@@ -95,20 +95,20 @@
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.id) {
             this.$http({
-              url: this.$http.adornUrl(`/ware/wmspurchase/info/${this.dataForm.id}`),
+              url: this.$http.adornUrl(`/ware/purchase/info/${this.dataForm.id}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.assigneeId = data.wmsPurchase.assigneeId
-                this.dataForm.assigneeName = data.wmsPurchase.assigneeName
-                this.dataForm.phone = data.wmsPurchase.phone
-                this.dataForm.priority = data.wmsPurchase.priority
-                this.dataForm.status = data.wmsPurchase.status
-                this.dataForm.wareId = data.wmsPurchase.wareId
-                this.dataForm.amount = data.wmsPurchase.amount
-                this.dataForm.createTime = data.wmsPurchase.createTime
-                this.dataForm.updateTime = data.wmsPurchase.updateTime
+                this.dataForm.assigneeId = data.purchase.assigneeId
+                this.dataForm.assigneeName = data.purchase.assigneeName
+                this.dataForm.phone = data.purchase.phone
+                this.dataForm.priority = data.purchase.priority
+                this.dataForm.status = data.purchase.status
+                this.dataForm.wareId = data.purchase.wareId
+                this.dataForm.amount = data.purchase.amount
+                this.dataForm.createTime = data.purchase.createTime
+                this.dataForm.updateTime = data.purchase.updateTime
               }
             })
           }
@@ -119,7 +119,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/ware/wmspurchase/${!this.dataForm.id ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/ware/purchase/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,

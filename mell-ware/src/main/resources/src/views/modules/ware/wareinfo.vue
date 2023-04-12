@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('ware:wmspurchase:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('ware:wmspurchase:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('ware:wareinfo:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('ware:wareinfo:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -26,61 +26,25 @@
         prop="id"
         header-align="center"
         align="center"
-        label="">
+        label="id">
       </el-table-column>
       <el-table-column
-        prop="assigneeId"
+        prop="name"
         header-align="center"
         align="center"
-        label="">
+        label="仓库名">
       </el-table-column>
       <el-table-column
-        prop="assigneeName"
+        prop="address"
         header-align="center"
         align="center"
-        label="">
+        label="仓库地址">
       </el-table-column>
       <el-table-column
-        prop="phone"
+        prop="areacode"
         header-align="center"
         align="center"
-        label="">
-      </el-table-column>
-      <el-table-column
-        prop="priority"
-        header-align="center"
-        align="center"
-        label="">
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        header-align="center"
-        align="center"
-        label="">
-      </el-table-column>
-      <el-table-column
-        prop="wareId"
-        header-align="center"
-        align="center"
-        label="">
-      </el-table-column>
-      <el-table-column
-        prop="amount"
-        header-align="center"
-        align="center"
-        label="">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        label="">
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        header-align="center"
-        align="center"
-        label="">
+        label="区域编码">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -109,7 +73,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './wmspurchase-add-or-update'
+  import AddOrUpdate from './wareinfo-add-or-update'
   export default {
     data () {
       return {
@@ -136,7 +100,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/ware/wmspurchase/list'),
+          url: this.$http.adornUrl('/ware/wareinfo/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -187,7 +151,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/ware/wmspurchase/delete'),
+            url: this.$http.adornUrl('/ware/wareinfo/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

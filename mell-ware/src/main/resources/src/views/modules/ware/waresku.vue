@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('ware:wmswareordertask:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('ware:wmswareordertask:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('ware:waresku:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('ware:waresku:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -29,70 +29,10 @@
         label="id">
       </el-table-column>
       <el-table-column
-        prop="orderId"
+        prop="skuId"
         header-align="center"
         align="center"
-        label="order_id">
-      </el-table-column>
-      <el-table-column
-        prop="orderSn"
-        header-align="center"
-        align="center"
-        label="order_sn">
-      </el-table-column>
-      <el-table-column
-        prop="consignee"
-        header-align="center"
-        align="center"
-        label="收货人">
-      </el-table-column>
-      <el-table-column
-        prop="consigneeTel"
-        header-align="center"
-        align="center"
-        label="收货人电话">
-      </el-table-column>
-      <el-table-column
-        prop="deliveryAddress"
-        header-align="center"
-        align="center"
-        label="配送地址">
-      </el-table-column>
-      <el-table-column
-        prop="orderComment"
-        header-align="center"
-        align="center"
-        label="订单备注">
-      </el-table-column>
-      <el-table-column
-        prop="paymentWay"
-        header-align="center"
-        align="center"
-        label="付款方式【 1:在线付款 2:货到付款】">
-      </el-table-column>
-      <el-table-column
-        prop="taskStatus"
-        header-align="center"
-        align="center"
-        label="任务状态">
-      </el-table-column>
-      <el-table-column
-        prop="orderBody"
-        header-align="center"
-        align="center"
-        label="订单描述">
-      </el-table-column>
-      <el-table-column
-        prop="trackingNo"
-        header-align="center"
-        align="center"
-        label="物流单号">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        label="create_time">
+        label="sku_id">
       </el-table-column>
       <el-table-column
         prop="wareId"
@@ -101,10 +41,22 @@
         label="仓库id">
       </el-table-column>
       <el-table-column
-        prop="taskComment"
+        prop="stock"
         header-align="center"
         align="center"
-        label="工作单备注">
+        label="库存数">
+      </el-table-column>
+      <el-table-column
+        prop="skuName"
+        header-align="center"
+        align="center"
+        label="sku_name">
+      </el-table-column>
+      <el-table-column
+        prop="stockLocked"
+        header-align="center"
+        align="center"
+        label="锁定库存">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -133,7 +85,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './wmswareordertask-add-or-update'
+  import AddOrUpdate from './waresku-add-or-update'
   export default {
     data () {
       return {
@@ -160,7 +112,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/ware/wmswareordertask/list'),
+          url: this.$http.adornUrl('/ware/waresku/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -211,7 +163,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/ware/wmswareordertask/delete'),
+            url: this.$http.adornUrl('/ware/waresku/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

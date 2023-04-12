@@ -4,23 +4,23 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="采购单id" prop="purchaseId">
-      <el-input v-model="dataForm.purchaseId" placeholder="采购单id"></el-input>
+    <el-form-item label="sku_id" prop="skuId">
+      <el-input v-model="dataForm.skuId" placeholder="sku_id"></el-input>
     </el-form-item>
-    <el-form-item label="采购商品id" prop="skuId">
-      <el-input v-model="dataForm.skuId" placeholder="采购商品id"></el-input>
+    <el-form-item label="sku_name" prop="skuName">
+      <el-input v-model="dataForm.skuName" placeholder="sku_name"></el-input>
     </el-form-item>
-    <el-form-item label="采购数量" prop="skuNum">
-      <el-input v-model="dataForm.skuNum" placeholder="采购数量"></el-input>
+    <el-form-item label="购买个数" prop="skuNum">
+      <el-input v-model="dataForm.skuNum" placeholder="购买个数"></el-input>
     </el-form-item>
-    <el-form-item label="采购金额" prop="skuPrice">
-      <el-input v-model="dataForm.skuPrice" placeholder="采购金额"></el-input>
+    <el-form-item label="工作单id" prop="taskId">
+      <el-input v-model="dataForm.taskId" placeholder="工作单id"></el-input>
     </el-form-item>
     <el-form-item label="仓库id" prop="wareId">
       <el-input v-model="dataForm.wareId" placeholder="仓库id"></el-input>
     </el-form-item>
-    <el-form-item label="状态[0新建，1已分配，2正在采购，3已完成，4采购失败]" prop="status">
-      <el-input v-model="dataForm.status" placeholder="状态[0新建，1已分配，2正在采购，3已完成，4采购失败]"></el-input>
+    <el-form-item label="1-已锁定  2-已解锁  3-扣减" prop="lockStatus">
+      <el-input v-model="dataForm.lockStatus" placeholder="1-已锁定  2-已解锁  3-扣减"></el-input>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -37,31 +37,31 @@
         visible: false,
         dataForm: {
           id: 0,
-          purchaseId: '',
           skuId: '',
+          skuName: '',
           skuNum: '',
-          skuPrice: '',
+          taskId: '',
           wareId: '',
-          status: ''
+          lockStatus: ''
         },
         dataRule: {
-          purchaseId: [
-            { required: true, message: '采购单id不能为空', trigger: 'blur' }
-          ],
           skuId: [
-            { required: true, message: '采购商品id不能为空', trigger: 'blur' }
+            { required: true, message: 'sku_id不能为空', trigger: 'blur' }
+          ],
+          skuName: [
+            { required: true, message: 'sku_name不能为空', trigger: 'blur' }
           ],
           skuNum: [
-            { required: true, message: '采购数量不能为空', trigger: 'blur' }
+            { required: true, message: '购买个数不能为空', trigger: 'blur' }
           ],
-          skuPrice: [
-            { required: true, message: '采购金额不能为空', trigger: 'blur' }
+          taskId: [
+            { required: true, message: '工作单id不能为空', trigger: 'blur' }
           ],
           wareId: [
             { required: true, message: '仓库id不能为空', trigger: 'blur' }
           ],
-          status: [
-            { required: true, message: '状态[0新建，1已分配，2正在采购，3已完成，4采购失败]不能为空', trigger: 'blur' }
+          lockStatus: [
+            { required: true, message: '1-已锁定  2-已解锁  3-扣减不能为空', trigger: 'blur' }
           ]
         }
       }
@@ -74,17 +74,17 @@
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.id) {
             this.$http({
-              url: this.$http.adornUrl(`/ware/wmspurchasedetail/info/${this.dataForm.id}`),
+              url: this.$http.adornUrl(`/ware/wareordertaskdetail/info/${this.dataForm.id}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.purchaseId = data.wmsPurchaseDetail.purchaseId
-                this.dataForm.skuId = data.wmsPurchaseDetail.skuId
-                this.dataForm.skuNum = data.wmsPurchaseDetail.skuNum
-                this.dataForm.skuPrice = data.wmsPurchaseDetail.skuPrice
-                this.dataForm.wareId = data.wmsPurchaseDetail.wareId
-                this.dataForm.status = data.wmsPurchaseDetail.status
+                this.dataForm.skuId = data.wareOrderTaskDetail.skuId
+                this.dataForm.skuName = data.wareOrderTaskDetail.skuName
+                this.dataForm.skuNum = data.wareOrderTaskDetail.skuNum
+                this.dataForm.taskId = data.wareOrderTaskDetail.taskId
+                this.dataForm.wareId = data.wareOrderTaskDetail.wareId
+                this.dataForm.lockStatus = data.wareOrderTaskDetail.lockStatus
               }
             })
           }
@@ -95,16 +95,16 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/ware/wmspurchasedetail/${!this.dataForm.id ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/ware/wareordertaskdetail/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
-                'purchaseId': this.dataForm.purchaseId,
                 'skuId': this.dataForm.skuId,
+                'skuName': this.dataForm.skuName,
                 'skuNum': this.dataForm.skuNum,
-                'skuPrice': this.dataForm.skuPrice,
+                'taskId': this.dataForm.taskId,
                 'wareId': this.dataForm.wareId,
-                'status': this.dataForm.status
+                'lockStatus': this.dataForm.lockStatus
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
