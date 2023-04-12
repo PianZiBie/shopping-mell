@@ -3,11 +3,15 @@ package com.example.mell.product.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.example.mell.product.entity.BrandEntity;
+import com.example.mell.product.vo.BrandVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,25 @@ import com.example.mell.product.service.CategoryBrandRelationService;
 public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+
+
+
+    //http://localhost:88/api/product/categorybrandrelation/brands/list?t=1681183251400&catId=225
+    @GetMapping("/brands/list")
+    public R relationBrandsList(@RequestParam(value = "catId",required = true) Long catId){
+        List<BrandEntity> vos=categoryBrandRelationService.getBrandsById(catId);
+        List<BrandVo> collect = vos.stream().map(item -> {
+                    BrandVo brandVo = new BrandVo();
+                    if (item==null){
+                        return null;
+                    }
+                    brandVo.setBrandId(item.getBrandId());
+                    brandVo.setBrandName(item.getName());
+                    return brandVo;
+                }
+        )  .filter(Objects::nonNull).collect(Collectors.toList());
+        return R.ok().put("data",collect);
+    }
 
     /**
      * 获取当前品牌关联分类的列表

@@ -18,6 +18,20 @@ spring:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+#会员断言
+        - id: member_route
+          uri: lb://mell-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+#库存断言
+        - id: ware_route
+          uri: lb://mell-ware
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
 #前端文件上传
         - id: third_party_route
           uri: lb://mell-third-party

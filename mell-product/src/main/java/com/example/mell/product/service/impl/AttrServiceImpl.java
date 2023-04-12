@@ -1,6 +1,7 @@
 package com.example.mell.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.constant.ProductConstant;
 import com.example.common.utils.PageUtils;
 import com.example.common.utils.Query;
@@ -69,7 +70,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         if (catelogId != 0) {
             wrapper.eq("catelog_id", catelogId);
         }
-        String key = params.get("key").toString();
+        String key = (String) params.get("key");
         if (StringUtils.isNotEmpty(key)) {
 
             wrapper.and((objWrapper) -> {
@@ -204,5 +205,48 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
             return attrAttrgroupRelationEntity;
         }).collect(Collectors.toList());
         relationDao.deleteBatchRelation(entities);
+    }
+
+    /**
+     *获取当前分组没有关联的所有属性
+     * @param params
+     * @param attgroupId
+     * @return
+     */
+    @Override
+    public PageUtils getNotRelationAttr(Map<String, Object> params, Long attgroupId) {
+        // 当前分组只能关联自己所属 分类的里面的所有属性
+        AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attgroupId);
+        Long catelogId = attrGroupEntity.getCatelogId();
+        // 当前分组只能关联自己别的分组没有引用的属性
+        //当前分类的其他分组
+        List<AttrGroupEntity> groupEntityList = attrGroupDao.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+        List<Long> collect = groupEntityList.stream().map(item -> {
+            Long attrGroupId = item.getAttrGroupId();
+            return attrGroupId;
+        }).collect(Collectors.toList());
+        //这些分类的属性
+        List<AttrAttrgroupRelationEntity> attrGroupId = relationDao.selectList(new QueryWrapper<AttrAttrgroupRelationEntity>().in("attr_group_id", collect));
+        List<Long> attrIds = attrGroupId.stream().map(item -> {
+            Long attrId = item.getAttrId();
+            return attrId;
+        }).collect(Collectors.toList());
+//        List<AttrEntity> entities = this.baseMapper.selectList(new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).notIn("attr_id", attrIds));
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).eq("attr_type",ProductConstant.AttrEnum.ATTR_ENUM_BASE.getCode());
+        if (attrIds!=null&&attrIds.size()>0){
+            wrapper.notIn("attr_id", attrIds);
+
+        }
+
+        String key = (String) params.get("key");
+        if (StringUtils.isNotEmpty(key)){
+            wrapper.and(w->{
+                w.eq("attr_id",key).or().like("attr_name",key);
+            });
+
+        }
+        IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(params), wrapper);
+
+        return  new PageUtils(page);
     }
 }

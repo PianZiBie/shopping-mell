@@ -7,8 +7,10 @@ import com.example.common.utils.PageUtils;
 import com.example.common.utils.R;
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.example.mell.product.entity.AttrEntity;
+import com.example.mell.product.service.AttrAttrgroupRelationService;
 import com.example.mell.product.service.AttrService;
 import com.example.mell.product.vo.AttrGroupRelationVo;
+import com.example.mell.product.vo.AttrGroupWithAttrsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,34 @@ public class AttrGroupController {
     private AttrGroupService attrGroupService;
     @Autowired
     private AttrService attrService;
+
+
+
+    @Autowired
+    private AttrAttrgroupRelationService relationService;
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long catelogId){
+        //1.查出当前分类下的所有属性分组
+        List<AttrGroupWithAttrsVo> vos=attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        //2.查出每个属性分组的所有信息
+        return R.ok().put("data",vos);
+    }
+    @PostMapping("/attr/relation")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos){
+        relationService.saveBatch(vos);
+        return R.ok();
+    }
+
+    /**
+     * 查询未关联
+     * @param attgroupId
+     * @return
+     */
+    @GetMapping("/{attgroupId}/noattr/relation")
+    public R attrRelation(@PathVariable("attgroupId") Long attgroupId,@RequestParam Map<String,Object> params){
+        PageUtils page=attrService.getNotRelationAttr(params,attgroupId);
+        return R.ok().put("page",page);
+    }
 
     /**
      * 删关联
