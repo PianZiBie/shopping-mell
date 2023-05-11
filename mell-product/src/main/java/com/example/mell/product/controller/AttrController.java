@@ -1,9 +1,12 @@
 package com.example.mell.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.example.mell.product.entity.ProductAttrValueEntity;
+import com.example.mell.product.service.ProductAttrValueService;
 import com.example.mell.product.vo.AttrRespVo;
 import com.example.mell.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,14 @@ import com.example.mell.product.service.AttrService;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
+
+    @GetMapping("/basse/listforspu/{spuId}")
+    public R baseAttrListForSpu( @PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> entities=productAttrValueService.baseAttrListForSpu(spuId);
+        return R.ok().put("data",entities);
+    }
 
     /**
      * @param params
@@ -91,6 +102,14 @@ public class AttrController {
     //@RequiresPermissions("product:attr:update")
     public R update(@RequestBody AttrVo attr) {
         attrService.updateAttr(attr);
+
+        return R.ok();
+    }
+    @PostMapping("/update/{spuId}")
+    //@RequiresPermissions("product:attr:update")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuId,
+                           @RequestBody List<ProductAttrValueEntity> entities) {
+        productAttrValueService.updateSpuAttr(spuId,entities);
 
         return R.ok();
     }

@@ -25,6 +25,7 @@
         <module>mell-common</module>
         <module>mell-gateway</module>
         <module>mell-third-party</module>
+        <module>mell-search</module>
     </modules>
 
 

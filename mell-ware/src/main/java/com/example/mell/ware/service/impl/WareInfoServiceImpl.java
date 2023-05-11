@@ -11,6 +11,7 @@ import com.example.common.utils.Query;
 import com.example.mell.ware.dao.WareInfoDao;
 import com.example.mell.ware.entity.WareInfoEntity;
 import com.example.mell.ware.service.WareInfoService;
+import org.apache.commons.lang.StringUtils;
 
 
 @Service("wareInfoService")
@@ -18,9 +19,19 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+
+        QueryWrapper<WareInfoEntity> wareInfoEntityQueryWrapper = new QueryWrapper<>();
+        String key = (String) params.get("key");
+        if(!StringUtils.isEmpty(key)){
+            wareInfoEntityQueryWrapper.eq("id",key).or()
+                    .like("name",key)
+                    .or().like("address",key)
+                    .or().like("areacode",key);
+        }
+
         IPage<WareInfoEntity> page = this.page(
                 new Query<WareInfoEntity>().getPage(params),
-                new QueryWrapper<WareInfoEntity>()
+                wareInfoEntityQueryWrapper
         );
 
         return new PageUtils(page);

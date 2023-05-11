@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class MellProductApplication {
     public static void main(String[] args) {
         SpringApplication.run(MellProductApplication.class, args);
+
     }
 
 }
