@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MellSearchApplication {
     public static void main(String[] args) {
         SpringApplication.run(MellSearchApplication.class, args);
-
     }
+
 
 }

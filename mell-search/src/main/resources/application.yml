@@ -5,4 +5,4 @@ spring:
   application:
     name: mell-search
 server:
-  port:
+  port: 8838

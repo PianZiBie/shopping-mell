@@ -54,12 +54,10 @@
             <artifactId>elasticsearch</artifactId>
             <version>7.12.1</version> <!-- Elasticsearch 版本号 -->
         </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.79</version>
-            <scope>test</scope>
-        </dependency>
+
+
+
+
 
     </dependencies>
     <dependencyManagement>
