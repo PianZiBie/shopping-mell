@@ -9,7 +9,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class MellThirdPartyApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(MellThirdPartyApplication.class, args);
+
+
 	}
 
 }

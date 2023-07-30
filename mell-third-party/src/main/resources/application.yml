@@ -3,7 +3,17 @@ spring:
     name: mell-third-party
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: 192.168.32.151:8848
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 2293301944@qq.com
+    password: fruulnjgqrncebja
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
 server:
   port: 30000
 minio:

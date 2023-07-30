@@ -47,6 +47,27 @@ spring:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+#nginx
+        - id: admin_nginx_route_search
+          uri: lb://mell-search
+          predicates:
+            - Host=search.mell.com
+
+
+
+
+        - id: admin_nginx_route_Host
+          uri: lb://mell-product
+          predicates:
+            - Host=mell.com,item.mell.com
+
+        - id: admin_nginx_auth_server_route
+          uri: lb://mell-auth-server
+          predicates:
+            - Host=auth.mell.com
+
+
+
 
 
 

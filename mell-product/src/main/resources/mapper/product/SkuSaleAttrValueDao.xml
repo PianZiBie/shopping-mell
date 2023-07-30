@@ -14,4 +14,37 @@
     </resultMap>
 
 
+
+    <resultMap id="SkuItemSaleAttrVo" type="com.example.mell.product.vo.SkuItemVo$SkuItemSaleAttrVo">
+        <result column="arrt_id" property="attrId"></result>
+        <result column="attr_name" property="attrName"></result>
+        <collection property="attrValues" ofType="com.example.mell.product.vo.AttrValueWithSkuIdVo">
+            <result column="attr_value" property="attrValue"></result>
+            <result column="sku_ids" property="skuIds"></result>
+        </collection>
+    </resultMap>
+
+
+    <select id="getSaleAttrsBySpuId" resultMap="SkuItemSaleAttrVo">
+        SELECT
+            ssav.attr_id attr_id,
+            ssav.attr_name attr_name,
+            ssav.attr_value,
+            group_concat( DISTINCT info.sku_id ) sku_ids
+        FROM
+            pms_sku_info info
+                LEFT JOIN pms_sku_sale_attr_value ssav ON ssav.sku_id = info.sku_id
+        WHERE
+            info.spu_id = #{spuId}
+        GROUP BY
+            ssav.attr_id,
+            ssav.attr_name,
+            ssav.attr_value
+
+    </select>
+
+
+
+
+
 </mapper>

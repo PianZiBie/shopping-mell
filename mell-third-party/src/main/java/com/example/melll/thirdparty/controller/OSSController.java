@@ -8,6 +8,9 @@ import com.aliyun.oss.model.PolicyConditions;
 import com.example.common.utils.R;
 import com.example.melll.thirdparty.config.MinioConfig;
 import com.example.melll.thirdparty.util.MinioUtils;
+import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.MinioClient;
+import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,10 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -80,6 +80,24 @@ public class OSSController {
         respMap.put("expire", String.valueOf(expireEndTime / 1000));
         // respMap.put("expire", formatISO8601Date(expiration));
         return R.ok().put("data",respMap);
+    }
+
+    @RequestMapping("/minio/policy")
+    protected String getMinioPolicy(@RequestParam("bucketName") String bucketName,@RequestParam("objectName") String objectName) throws Exception {
+
+        MinioClient minioClient = MinioClient.builder().endpoint("http://192.168.32.151:9000")
+                .credentials("b3sfh7OSClkOdOvf", "Klp0webqmQWUj5mD3ZNgNGvFYUT8Dmbc").build();
+        Map<String, String> reqParams = new HashMap<String, String>();
+        reqParams.put("response-content-type", "application/json");
+        String product = minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .method(Method.PUT) //这里必须是PUT，如果是GET的话就是文件访问地址了。如果是POST上传会报错.
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .expiry(60 * 60 * 24)
+                        .extraQueryParams(reqParams)
+                        .build());
+        return product;
     }
 
 

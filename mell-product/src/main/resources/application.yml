@@ -6,13 +6,28 @@ spring:
     url: jdbc:mysql://192.168.32.151:3306/mell_pms
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: 192.168.32.151:8848
   application:
     name: mell-product
   main:
     allow-circular-references: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.32.151
+    port: 6379
+  cache:
+    type: redis
+    #cache-names:
+    redis:
+      time-to-live: 360000
+#      key-prefix: CACHE_
+      use-key-prefix: true
+      #是否缓存空值
+      cache-null-values: true
+
 
 
 mybatis-plus:

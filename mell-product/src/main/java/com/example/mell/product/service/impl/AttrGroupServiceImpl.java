@@ -5,6 +5,7 @@ import com.example.common.utils.Query;
 import com.example.mell.product.entity.AttrEntity;
 import com.example.mell.product.service.AttrService;
 import com.example.mell.product.vo.AttrGroupWithAttrsVo;
+import com.example.mell.product.vo.SkuItemVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -76,23 +77,43 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
      * @param catelogId
      * @return
      */
-    @Override
+// 获取属性组及其属性
     public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId) {
-        //查询分组信息
+        // 查询分组信息
         List<AttrGroupEntity> attrGroupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+
+        // 将每个 AttrGroupEntity 对象转换为 AttrGroupWithAttrsVo 对象
         List<AttrGroupWithAttrsVo> collect = attrGroupEntities.stream().map(
                 item -> {
                     AttrGroupWithAttrsVo attrGroupWithAttrsVo = new AttrGroupWithAttrsVo();
                     BeanUtils.copyProperties(item, attrGroupWithAttrsVo);
+
+                    // 获取与该属性组关联的所有属性
                     List<AttrEntity> relationAttr = attrService.getRelationAttr(attrGroupWithAttrsVo.getAttrGroupId());
                     attrGroupWithAttrsVo.setAttrs(relationAttr);
-                    if ( relationAttr!=null){
-                        return attrGroupWithAttrsVo;
+
+                    // 如果没有属性，则将该对象从列表中删除
+                    if (relationAttr == null) {
+                        return null;
                     }
-                    return null;
+
+                    return attrGroupWithAttrsVo;
                 }
         ).collect(Collectors.toList());
+
+        // 从列表中删除空对象
         collect.removeIf(Objects::isNull);
+
+        // 返回列表
         return collect;
+    }
+
+    @Override
+    public List<SkuItemVo.SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId) {
+
+        //查出当前spu对应的所有属性分组
+        AttrGroupDao baseMapper = this.getBaseMapper();
+        List<SkuItemVo.SpuItemAttrGroupVo> vos =baseMapper.getAttrGroupWithAttrsBySpuId(spuId, catalogId);
+        return vos;
     }
 }
